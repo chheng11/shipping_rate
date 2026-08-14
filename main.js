@@ -1,3 +1,5 @@
+
+// ---- DATA -------------------------------------------------------
 const WEIGHT_BRACKETS = [1,2,3,5,10,15,20,25,30,31]; // 31 = "31kg Up"
 const BRACKET_LABELS  = ["1kg","2kg","3kg","5kg","10kg","15kg","20kg","25kg","30kg","31kg Up"];
 
@@ -191,20 +193,18 @@ countryInput.addEventListener("keydown", (e) => {
   }
 });
 
-// ---- weight stepper (whole numbers only) -----------------------
+// ---- weight input -----------------------
 let weight = 5;
 const MIN_W = 1, MAX_W = 999;
-const weightValueEl = document.getElementById("weightValue");
-document.getElementById("minusBtn").addEventListener("click", () => {
-  weight = Math.max(MIN_W, weight - 1);
-  weightValueEl.textContent = weight;
+const weightInput = document.getElementById("weightInput");
+
+function setWeight(val){
+  weight = Math.min(MAX_W, Math.max(MIN_W, Math.round(val) || 1));
   updateResult();
-});
-document.getElementById("plusBtn").addEventListener("click", () => {
-  weight = Math.min(MAX_W, weight + 1);
-  weightValueEl.textContent = weight;
-  updateResult();
-});
+}
+
+weightInput.addEventListener("input", () => setWeight(parseFloat(weightInput.value)));
+weightInput.addEventListener("blur", () => { weightInput.value = weight; });
 
 // ---- category tabs ----------------------------------------------
 const resultPrice = document.getElementById("resultPrice");
@@ -330,26 +330,30 @@ document.getElementById("newLookupBtn").addEventListener("click", () => {
   window.scrollTo({top:0, behavior:"smooth"});
 });
 
-document.getElementById("downloadBtn").addEventListener("click", () => {
-  const btn = document.getElementById("downloadBtn");
+function captureWaybill(){
   const actions = document.querySelector(".waybill-actions");
-  actions.style.display = "none";
-  btn.style.display = "none";
-
-  html2canvas(document.querySelector(".waybill"), {
-    scale: 2,
+  actions.style.visibility = "hidden";
+  return html2canvas(document.querySelector(".waybill"), {
+    scale: 2.5,
     useCORS: true,
     allowTaint: true,
     backgroundColor: "#FAFAF8"
-  }).then(canvas => {
-    actions.style.display = "";
-    const country = COUNTRIES[selectedIndex];
+  }).finally(() => { actions.style.visibility = ""; });
+}
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const country = COUNTRIES[selectedIndex];
+  captureWaybill().then(canvas => {
     const link = document.createElement("a");
     link.download = `GPSL-${country.name.replace(/\s/g,"-")}-Rate.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
-  }).catch(() => {
-    actions.style.display = "";
-    alert("Download failed. Try the Print option instead (Ctrl+P).");
+  });
+});
+
+document.getElementById("screenshotBtn").addEventListener("click", () => {
+  captureWaybill().then(canvas => {
+    const win = window.open();
+    win.document.write(`<title>GPSL Rate Screenshot</title><body style="margin:0;background:#1D607D;display:flex;justify-content:center;padding:30px"><img src="${canvas.toDataURL()}" style="max-width:100%;border-radius:8px;box-shadow:0 20px 50px rgba(0,0,0,0.5)"></body>`);
   });
 });
