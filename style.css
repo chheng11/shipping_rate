@@ -1,4 +1,5 @@
- :root{
+
+  :root{
     --brand:#1D607D;
     --brand-2:#164C64;
     --red:#E21F27;
@@ -205,46 +206,21 @@
     letter-spacing:.02em;
   }
 
-  .stepper{
-    display:flex;
-    align-items:stretch;
-    border:1.5px solid #D8DCE3;
-    border-radius:4px;
-    overflow:hidden;
-    height:46px;
-  }
-  .stepper button{
-    width:46px;
-    border:none;
-    background:#F0F2F5;
-    color:#16233F;
-    font-size:20px;
-    font-weight:600;
-    cursor:pointer;
-    font-family:'Space Mono',monospace;
-  }
-  .stepper button:hover{ background:#E4E8ED; }
-  .stepper button:active{ background:var(--brand); color:var(--white); }
-  .stepper .kg-display{
-    flex:1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
+  .weight-plain-input{
+    width:100%;
     font-family:'Space Mono',monospace;
     font-size:17px;
     font-weight:700;
     color:#16233F;
-    border-left:1.5px solid #D8DCE3;
-    border-right:1.5px solid #D8DCE3;
+    padding:12px 14px;
+    border:1.5px solid #D8DCE3;
+    border-radius:4px;
+    background:var(--white);
+    -moz-appearance:textfield;
   }
-  .kg-display span.unit{
-    font-size:11px;
-    font-weight:400;
-    color:#8B8F80;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-  }
+  .weight-plain-input::-webkit-outer-spin-button,
+  .weight-plain-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .weight-plain-input:focus{ outline:none; border-color:var(--brand); }
 
   .tabs{
     display:flex;
